@@ -28,6 +28,7 @@
             <array>
                 <string>com.pixinsight.xisf</string>
                 <string>public.fits</string>
+                <string>gov.nasa.gsfc.fits</string>
             </array>
             <key>QLThumbnailMinimumDimension</key>
             <integer>0</integer>

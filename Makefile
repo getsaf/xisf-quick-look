@@ -40,6 +40,8 @@ install: build
 # ── Restart Quick Look subsystem ──────────────────────────────
 reset-ql:
 	@echo "Resetting Quick Look..."
+	/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister \
+		-f /Applications/XISFQuickLook.app 2>/dev/null || true
 	qlmanage -r 2>/dev/null || true
 	killall -HUP Finder 2>/dev/null || true
 
