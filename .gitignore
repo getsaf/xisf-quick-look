@@ -1,0 +1,28 @@
+# Build artifacts
+build/
+*.xcodeproj/
+*.xcworkspace/
+
+# Vendor builds
+vendor/libxisf/build/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Xcode
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.xcarchive
+*.xcresult
+
+# Compiled tools
+tools/test_decode
+tools/test_thumbnail
+
+# DMG staging
+*.dmg

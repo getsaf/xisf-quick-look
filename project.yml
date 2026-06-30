@@ -1,0 +1,86 @@
+name: XISFQuickLook
+
+options:
+  bundleIdPrefix: com.getsaf
+  deploymentTarget:
+    macOS: "13.3"
+  xcodeVersion: "16"
+  generateEmptyDirectories: false
+
+settings:
+  base:
+    MACOSX_DEPLOYMENT_TARGET: "13.3"
+    SWIFT_VERSION: "5.9"
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_HARDENED_RUNTIME: YES
+
+# ── Common C++ settings shared by both extensions ──────────────
+# Factored into a named settings group so we don't duplicate them.
+
+targets:
+
+  # ── Host application ──────────────────────────────────────────
+  XISFQuickLook:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/App
+    dependencies:
+      - target: XISFThumbnail
+        embed: true
+        codeSign: true
+      - target: XISFPreview
+        embed: true
+        codeSign: true
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.getsaf.XISFQuickLook
+      INFOPLIST_FILE: Sources/App/Info.plist
+      SWIFT_VERSION: "5.9"
+
+  # ── Thumbnailer extension ─────────────────────────────────────
+  XISFThumbnail:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: Sources/Thumbnailer
+      - path: Sources/Common
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.getsaf.XISFQuickLook.Thumbnailer
+      INFOPLIST_FILE: Sources/Thumbnailer/Info.plist
+      SWIFT_OBJC_BRIDGING_HEADER: Sources/Thumbnailer/Bridging-Header.h
+      CLANG_CXX_LANGUAGE_STANDARD: c++17
+      CLANG_CXX_LIBRARY: libc++
+      HEADER_SEARCH_PATHS:
+        - $(SRCROOT)/vendor/libxisf
+      GCC_PREPROCESSOR_DEFINITIONS:
+        - LIBXISF_STATIC_LIB=1
+        - $(inherited)
+      CODE_SIGN_ENTITLEMENTS: Sources/Thumbnailer/Thumbnailer.entitlements
+      OTHER_LDFLAGS:
+        - $(SRCROOT)/vendor/libxisf/build/libXISF.a
+        - /opt/homebrew/opt/zstd/lib/libzstd.a
+        - -lz
+
+  # ── Previewer extension ───────────────────────────────────────
+  XISFPreview:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: Sources/Previewer
+      - path: Sources/Common
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.getsaf.XISFQuickLook.Previewer
+      INFOPLIST_FILE: Sources/Previewer/Info.plist
+      SWIFT_OBJC_BRIDGING_HEADER: Sources/Previewer/Bridging-Header.h
+      CLANG_CXX_LANGUAGE_STANDARD: c++17
+      CLANG_CXX_LIBRARY: libc++
+      HEADER_SEARCH_PATHS:
+        - $(SRCROOT)/vendor/libxisf
+      GCC_PREPROCESSOR_DEFINITIONS:
+        - LIBXISF_STATIC_LIB=1
+        - $(inherited)
+      CODE_SIGN_ENTITLEMENTS: Sources/Previewer/Previewer.entitlements
+      OTHER_LDFLAGS:
+        - $(SRCROOT)/vendor/libxisf/build/libXISF.a
+        - /opt/homebrew/opt/zstd/lib/libzstd.a
+        - -lz
